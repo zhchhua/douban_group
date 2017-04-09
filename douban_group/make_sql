@@ -1,0 +1,21 @@
+CREATE TABLE `kaopu_topic` (
+  `id` int(10) NOT NULL ,
+  `headline` varchar(255) DEFAULT NULL,
+  `author` varchar(25),
+  `author_id` int(10) DEFAULT NULL,
+  `pub_time` varchar(100) DEFAULT NULL,
+  `content` text DEFAULT NULL,
+   `like`  varchar(10) DEFAULT NULL,
+   `count` int (10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+CREATE TABLE `kaopu_topic_reply`(
+`num_id` int(10) NOT NULL,
+`topic_id` int(10) NOT NULL,
+`user_id` varchar(255) NOT NULL,
+`user_name` varchar(50) NOT NULL,
+`remark_content` text,
+`remark_time` varchar(50) NOT NULL, 
+PRIMARY KEY (`num_id`,`topic_id`)
+);
+ALTER TABLE `kaopu_topic_reply` CHANGE `user_name` `user_name` VARCHAR(50) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;
