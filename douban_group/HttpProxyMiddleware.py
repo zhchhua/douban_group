@@ -147,9 +147,9 @@ class HttpProxyMiddleware(object):
         logger.info("now using new proxy: %s" % self.proxyes[self.proxy_index]["proxy"])
 
         # 一定时间没更新后可能出现了在目前的代理不断循环不断验证码错误的情况, 强制抓取新代理
-        #if datetime.now() > self.last_fetch_proxy_time + timedelta(minutes=self.fetch_proxy_interval):
-        #    logger.info("%d munites since last fetch" % self.fetch_proxy_interval)
-        #    self.fetch_new_proxyes()
+        if datetime.now() > self.last_fetch_proxy_time + timedelta(minutes=self.fetch_proxy_interval):
+            logger.info("%d munites since last fetch" % self.fetch_proxy_interval)
+            self.fetch_new_proxyes()
 
     def set_proxy(self, request):
         """
@@ -207,17 +207,17 @@ class HttpProxyMiddleware(object):
         """
         ug = "Baiduspider"
         request.headers["User-Agent"] = random.choice(self.user_agent_list)
-#        if self.proxy_index > 0  and datetime.now() > (self.last_no_proxy_time + timedelta(minutes=self.recover_interval)):
-#            logger.info("After %d minutes later, recover from using proxy" % self.recover_interval)
-#            self.last_no_proxy_time = datetime.now()
-#            self.proxy_index = 0
-#        request.meta["dont_redirect"] = True  # 有些代理会把请求重定向到一个莫名其妙的地址
+        if self.proxy_index > 0  and datetime.now() > (self.last_no_proxy_time + timedelta(minutes=self.recover_interval)):
+            logger.info("After %d minutes later, recover from using proxy" % self.recover_interval)
+            self.last_no_proxy_time = datetime.now()
+            self.proxy_index = 0
+        request.meta["dont_redirect"] = True  # 有些代理会把请求重定向到一个莫名其妙的地址
 
         # spider发现parse error, 要求更换代理
-#       if "change_proxy" in request.meta.keys() and request.meta["change_proxy"]:
-#            logger.info("change proxy request get by spider: %s"  % request)
-#            self.invalid_proxy(request.meta["proxy_index"])
-#            request.meta["change_proxy"] = False
+       if "change_proxy" in request.meta.keys() and request.meta["change_proxy"]:
+            logger.info("change proxy request get by spider: %s"  % request)
+            self.invalid_proxy(request.meta["proxy_index"])
+            request.meta["change_proxy"] = False
         self.set_proxy(request)
 
     def process_response(self, request, response, spider):
